@@ -1,0 +1,68 @@
+README - fEstimadores
+======================
+
+This folder contains all R functions used to compute semantic richness estimators 
+
+These estimators are non-parametric and are adapted from biodiversity estimation methods, 
+such as Chao2 and its bias-corrected version, as well as a heuristic estimator 
+that excludes low-frequency properties.
+
+--------------------------------------------------------
+CONTENTS
+--------------------------------------------------------
+
+1. fEstimadores.R
+-----------------
+Main wrapper function that calls all estimators and returns a standardized data frame 
+with point estimates, variances, and confidence intervals for each method. 
+Useful in simulation pipelines or batch processing of concepts.
+
+Output columns:
+  - Q1 to Q4: number of properties mentioned exactly 1, 2, 3, or 4 times
+  - nT: number of participants
+  - U: total number of mentions
+  - Sobs: observed richness
+  - Scut: truncated richness (cutoff at Q4)
+  - Schao2: Chao2 richness estimator with variance and 95% CI
+  - Schao2BC: Bias-corrected Chao2 richness estimator with variance and 95% CI
+
+2. fShat.R
+----------
+Implements the Chao2 estimator (Schao2) and its log-normal confidence interval.
+Uses Q1 and Q2 to estimate unobserved richness, with a fallback when Q2 = 0.
+
+3. fShat_bc.R
+-------------
+Implements the bias-corrected Chao2 estimator (Schao2BC) using Q1 and Q2+1 in the denominator.
+Provides variance and log-normal confidence interval.
+
+4. fScut.R
+----------
+Truncated richness estimator that sums all Q_i for i ≥ 5.
+Designed to exclude rare features (Q1–Q4) which are highly sensitive to sampling variability.
+
+5. ffGetQ.R
+-----------
+Auxiliary function that converts an incidence matrix (binary matrix: features × participants) 
+into a Q-vector, where Q_i is the number of features mentioned by exactly i participants.
+
+--------------------------------------------------------
+NOTES
+--------------------------------------------------------
+
+- All functions are written to be compatible with `vQ` vectors derived from 
+  incidence matrices via `ffGetQ()`.
+
+- Confidence intervals follow the log-normal approximation described in 
+  Canessa et al. (2020), tailored for richness estimators.
+
+- These functions assume binary, row-wise feature aggregation (i.e., feature counts per concept).
+
+- All outputs are clean and ready for data.frame concatenation or further analysis.
+
+--------------------------------------------------------
+AUTHOR
+--------------------------------------------------------
+
+Rodrigo Lagos  
+Date: Updated September 2024
