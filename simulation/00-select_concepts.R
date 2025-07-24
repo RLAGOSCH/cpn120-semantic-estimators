@@ -67,7 +67,7 @@ for (r in 1:length(vCon_concreto)) {
   for (c in r:length(vCon_concreto)) {
     dfR <- dfConcretos[dfConcretos$Concepto == vCon_concreto[r], ]
     dfC <- dfConcretos[dfConcretos$Concepto == vCon_concreto[c], ]
-    mtDis_concreto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$lamnda, wb = dfC$lamnda)
+    mtDis_concreto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$Frecuencia, wb = dfC$Frecuencia)
   }
 }
 
@@ -76,7 +76,7 @@ for (r in 1:length(vCon_abstracto)) {
   for (c in r:length(vCon_abstracto)) {
     dfR <- dfAbstractos[dfAbstractos$Concepto == vCon_abstracto[r], ]
     dfC <- dfAbstractos[dfAbstractos$Concepto == vCon_abstracto[c], ]
-    mtDis_abstracto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$lamnda, wb = dfC$lamnda)
+    mtDis_abstracto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$Frecuencia, wb = dfC$Frecuencia)
   }
 }
 
