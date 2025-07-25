@@ -32,21 +32,27 @@ input_file <- "results/SimulacionA_test.RDS"  # Modify to SimulacionA.RDS for Me
 #
 input_lst_mt <- "data_input/listMiCPN120.RDS"
 
+# 
+input_df_selection <- "results/dfSelecion.RDS"
+
 # Read simulation output
 df <- readRDS(input_file)
 df$Concepto <- toupper(df$Concepto)
 
-listMtI <- readRDS(input_lst_mt)
-
+listMtI        <- readRDS(input_lst_mt)
 names(listMtI) <-  toupper(names(listMtI))
 
-# Add population richness for each concept
-df_pobla <- tibble::tibble(
-  Concepto = c("SPIRAL", "SEED", "STING", "STATUS", "SCOPE", "ADDITION"),
-  Spob     = c(89, 67, 40, 101, 74, 32)
-)
 
-df <- left_join(df, df_pobla, by = "Concepto")
+df_selecion <- readRDS(input_df_selection)
+
+df_selecion$Concepto <- toupper(df_selecion$Concepto)
+
+df_selecion <- df_selecion[,-3]
+
+names(df_selecion)[2] <- "Spob"
+
+# Add population richness for each concept
+df <- left_join(df, df_selecion, by = "Concepto")
 
 # Rename columns for consistency
 df <- df %>%
@@ -57,7 +63,7 @@ df <- df %>%
   ) %>%
   mutate(
     Metodo   = ifelse(grepl("A", input_file), "A", "B"),
-    Concepto = factor(Concepto, levels = df_pobla$Concepto)
+    Concepto = factor(Concepto, levels = df_selecion$Concepto)
   )
 
 # Color palette for consistent visualization
@@ -121,8 +127,6 @@ df_check_Qk <- bind_rows(df_teo_q1, df_teo_q2) %>%
   select(nT, Concepto, Qk, Teorico) %>%
   left_join(df_mc_qk, by = c("nT", "Concepto", "Qk"))
 
-# Step 5: Order concept labels
-df_check_Qk$Concepto <- factor(df_check_Qk$Concepto, levels = ordered_concepts)
 ```
 
 ```{r plot-q1-mc-vs-theoretical, fig.width=8, fig.height=6, message=FALSE, warning=FALSE}
@@ -444,7 +448,7 @@ dfAnchoMeanTotal <- dfAnchoLong %>%
 
 ## Visualization of average confidence interval widths
 
-```{r plot-ci-widths, fig.width=9, fig.height=6, message=FALSE, warning=FALSE}
+```{r plot-ci-widths}
 
 # by estimator type and interval method (log-normal vs. asymptotic)
 

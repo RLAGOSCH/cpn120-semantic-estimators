@@ -40,8 +40,6 @@ dfAbstractos <- dfCPN120[dfCPN120$Categoria == "A", ]
 row.names(dfConcretos)  <- NULL
 row.names(dfAbstractos) <- NULL
 
-# Remove full object
-rm(dfCPN120)
 
 # -------------------------------------------------------
 # Identify unique concepts
@@ -67,7 +65,7 @@ for (r in 1:length(vCon_concreto)) {
   for (c in r:length(vCon_concreto)) {
     dfR <- dfConcretos[dfConcretos$Concepto == vCon_concreto[r], ]
     dfC <- dfConcretos[dfConcretos$Concepto == vCon_concreto[c], ]
-    mtDis_concreto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$Frecuencia, wb = dfC$Frecuencia)
+    mtDis_concreto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$lamnda, wb = dfC$lamnda)
   }
 }
 
@@ -76,7 +74,7 @@ for (r in 1:length(vCon_abstracto)) {
   for (c in r:length(vCon_abstracto)) {
     dfR <- dfAbstractos[dfAbstractos$Concepto == vCon_abstracto[r], ]
     dfC <- dfAbstractos[dfAbstractos$Concepto == vCon_abstracto[c], ]
-    mtDis_abstracto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$Frecuencia, wb = dfC$Frecuencia)
+    mtDis_abstracto[r, c] <- wasserstein1d(a = dfR$Order, b = dfC$Order, wa = dfR$lamnda, wb = dfC$lamnda)
   }
 }
 
@@ -144,6 +142,15 @@ vAbstractos <- c(
 cat("Concrete concepts:\n");   print(vConcretos)
 cat("\nAbstract concepts:\n"); print(vAbstractos)
 
+dfSelecion <- dfCPN120[,-c(2:5,7)]
+
+dfSelecion <- unique(dfSelecion)
+
+row.names(dfSelecion) <- NULL
+
+dfSelecion <- dfSelecion[dfSelecion$Concepto %in% c(vAbstractos, vConcretos),]
+
+
 # Optionally save
-saveRDS(object = list(concrete = vConcretos, abstract = vAbstractos),
-        file   = "results/listConceptosSelecionados.RDS")
+saveRDS(object = dfSelecion,
+        file   = "data_input/dfSelecion.RDS")

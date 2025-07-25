@@ -14,10 +14,8 @@ The simulations evaluate the statistical properties of semantic richness estimat
 - `data_input/`: Raw and simulated data (not versioned due to file size)
 - `fEstimadores/`: Core estimators (Schao2, Schao2BC, Scut, etc.)
 - `funciones_miselaneas/`: Auxiliary functions (e.g., Q-vector processing)
-- `scripts/`: Simulation scripts (Method A and B)
-- `analisis_final/`: Modular Quarto pipeline for generating figures and statistics
-- `informe_CPN120_V1.qmd`: Main analysis file (Quarto)
-- `results/` and `figures/`: Output from simulation and visualization steps
+- `simulacion/`: Simulation scripts (Method A and B)
+- `analysis`: Main analysis file (Quarto)
 
 ## How to Use
 
